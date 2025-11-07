@@ -1,10 +1,16 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { OverviewStats } from "@/components/features/dashboard/e-commerce/overview-stats";
 import { TopProducts } from "@/components/features/dashboard/e-commerce/top-products";
 import { CategoryStats } from "@/components/features/dashboard/e-commerce/category-stats";
 import { FamilyStats } from "@/components/features/dashboard/e-commerce/family-stats";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "E-commerce analytics dashboard with product catalog overview, inventory stats, and category insights.",
+};
 
 export default function DashboardPage() {
   return (
