@@ -1,11 +1,11 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "../supabase/server";
+import { createAdminClient } from "../supabase/admin";
 import { revalidatePath } from "next/cache";
-import { createUserSchema, updateProfileSchema } from "@/lib/validations/user";
-import type { ActionResponse, UserWithProfile, Profile } from "@/types/user";
-import type { CreateUserInput, UpdateProfileInput } from "@/lib/validations/user";
+import { createUserSchema, updateProfileSchema } from "../validations/user";
+import type { ActionResponse, UserWithProfile, Profile } from "../../types/user";
+import type { CreateUserInput, UpdateProfileInput } from "../validations/user";
 
 // ============================================================================
 // USERS CRUD

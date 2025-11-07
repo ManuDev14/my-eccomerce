@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "../supabase/server";
 import { revalidatePath } from "next/cache";
 import {
   familySchema,
@@ -9,7 +9,7 @@ import {
   optionSchema,
   featureSchema,
   productCreationSchema,
-} from "@/lib/validations/catalog";
+} from "../validations/catalog";
 import type {
   ActionResponse,
   Family,
@@ -21,8 +21,8 @@ import type {
   OptionWithFeatures,
   Product,
   ProductWithRelations,
-} from "@/types/catalog";
-import type { ProductCreationInput } from "@/lib/validations/catalog";
+} from "../../types/catalog";
+import type { ProductCreationInput } from "../validations/catalog";
 
 // ============================================================================
 // FAMILIES CRUD

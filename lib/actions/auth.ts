@@ -1,9 +1,9 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "../supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import type { ActionResponse } from "@/types/user";
+import type { ActionResponse } from "../../types/user";
 
 // ============================================================================
 // AUTH ACTIONS

@@ -7,7 +7,7 @@ import {
   isProtectedRoute,
   DEFAULT_LOGIN_REDIRECT,
   DEFAULT_AUTH_REDIRECT,
-} from "@/lib/config/routes";
+} from "../config/routes";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
