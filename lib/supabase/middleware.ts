@@ -23,7 +23,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
           supabaseResponse = NextResponse.next({
@@ -34,26 +34,18 @@ export async function updateSession(request: NextRequest) {
           );
         },
       },
-      auth: {
-        detectSessionInUrl: false,
-        persistSession: true,
-        autoRefreshToken: true,
-      },
-      global: {
-        // Disable realtime for Edge Runtime compatibility
-        // Middleware only needs auth validation, not realtime features
-        fetch: fetch,
-      },
     }
   );
 
   // IMPORTANT: Avoid writing any logic between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Use getClaims() instead of getUser() in middleware for better performance
+  // getClaims() reads from the JWT token (fast, no network call)
+  // getUser() makes an API call to Supabase (slow, network required)
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims;
 
   // ============================================================================
   // ROUTE PROTECTION LOGIC
