@@ -48,7 +48,7 @@ export function ProductOptionsStep({
         <Info className="h-4 w-4" />
         <AlertDescription>
           Selecciona las opciones que aplican a este producto. Por ejemplo, si el
-          producto tiene diferentes colores y tallas, selecciona "Color" y "Talla".
+          producto tiene diferentes colores y tallas, selecciona &quot;Color&quot; y &quot;Talla&quot;.
           En el siguiente paso podrás crear las variantes específicas.
         </AlertDescription>
       </Alert>

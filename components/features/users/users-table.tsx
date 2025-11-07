@@ -175,8 +175,8 @@ export function UsersTable({ users }: UsersTableProps) {
           <DialogHeader>
             <DialogTitle>¿Eliminar usuario?</DialogTitle>
             <DialogDescription>
-              ¿Estás seguro de que deseas eliminar al usuario "
-              {deletingUser?.profile?.full_name}"? Esta acción no se puede
+              ¿Estás seguro de que deseas eliminar al usuario &quot;
+              {deletingUser?.profile?.full_name}&quot;? Esta acción no se puede
               deshacer.
             </DialogDescription>
           </DialogHeader>

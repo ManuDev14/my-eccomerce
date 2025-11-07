@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { MoreHorizontal, Eye, Trash2 } from "lucide-react";
 import {
   Table,
@@ -100,10 +101,12 @@ export function ProductsTable({ products }: ProductsTableProps) {
                   <TableCell>
                     <div className="flex items-center gap-3">
                       {product.image_path && (
-                        <img
+                        <Image
                           src={product.image_path}
                           alt={product.name}
-                          className="w-10 h-10 rounded object-cover"
+                          width={40}
+                          height={40}
+                          className="rounded object-cover"
                         />
                       )}
                       <div>
@@ -167,7 +170,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
           <DialogHeader>
             <DialogTitle>¿Eliminar producto?</DialogTitle>
             <DialogDescription>
-              ¿Estás seguro de que deseas eliminar el producto "{deletingProduct?.name}"?
+              ¿Estás seguro de que deseas eliminar el producto &quot;{deletingProduct?.name}&quot;?
               Esta acción eliminará también todas sus variantes y no se puede deshacer.
             </DialogDescription>
           </DialogHeader>

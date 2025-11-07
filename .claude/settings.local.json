@@ -1,13 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "shadcn"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }
