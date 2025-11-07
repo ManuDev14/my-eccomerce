@@ -8,11 +8,21 @@ import {
   DEFAULT_LOGIN_REDIRECT,
   DEFAULT_AUTH_REDIRECT,
 } from "../config/routes";
+import { hasEnvVars } from "../utils";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
+
+  // Early return if Supabase environment variables are not configured
+  // This prevents errors during development or when env vars are missing
+  if (!hasEnvVars) {
+    console.warn(
+      "Missing Supabase environment variables. Auth middleware disabled."
+    );
+    return supabaseResponse;
+  }
 
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

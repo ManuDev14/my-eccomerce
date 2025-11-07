@@ -39,3 +39,21 @@ export function getInitials(fullName: string | null | undefined): string {
       : word[0].toUpperCase();
   }
 }
+
+/**
+ * Check if all required Supabase environment variables are set.
+ *
+ * This prevents errors in middleware and server components when
+ * environment variables are not configured.
+ *
+ * @returns boolean - true if all required env vars are defined
+ *
+ * @example
+ * if (!hasEnvVars) {
+ *   console.error("Missing Supabase environment variables");
+ *   return NextResponse.next();
+ * }
+ */
+export const hasEnvVars =
+  typeof process.env.NEXT_PUBLIC_SUPABASE_URL !== "undefined" &&
+  typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== "undefined";
