@@ -4,8 +4,8 @@
 README.md
 CLAUDE.md
 
-# Supabase local
-supabase
+# Supabase local CLI directory (NO ignorar lib/supabase/)
+/supabase
 
 # Environment variables locales (usa el dashboard de Vercel)
 .env.local
