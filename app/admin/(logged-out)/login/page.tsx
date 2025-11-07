@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, PersonStandingIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { login } from "@/lib/actions/auth";
@@ -33,7 +33,11 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
+
+  // Get callback URL from query params (set by middleware)
+  const callbackUrl = searchParams.get("callbackUrl") || "/admin/dashboard";
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,7 +54,8 @@ export default function LoginPage() {
 
       if (result.success) {
         toast.success("Inicio de sesión exitoso");
-        router.push("/admin/dashboard");
+        // Redirect to callback URL or default dashboard
+        router.push(callbackUrl);
         router.refresh();
       } else {
         toast.error(result.error);

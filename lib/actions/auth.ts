@@ -3,6 +3,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import type { ActionResponse } from "@/types/user";
+
+// ============================================================================
+// AUTH ACTIONS
+// ============================================================================
 
 export type LoginResult =
   | { success: true }
@@ -51,7 +56,7 @@ export async function login(email: string, password: string): Promise<LoginResul
 /**
  * Logout current user
  */
-export async function logout() {
+export async function logout(): Promise<ActionResponse> {
   try {
     const supabase = await createClient();
 
@@ -59,16 +64,23 @@ export async function logout() {
 
     if (error) {
       console.error("Logout error:", error);
-      throw error;
+      return {
+        success: false,
+        error: "Error al cerrar sesión",
+      };
     }
 
     revalidatePath("/", "layout");
-  } catch (error) {
+  } catch (error: any) {
     console.error("Unexpected logout error:", error);
-    throw error;
+    return {
+      success: false,
+      error: error.message || "Error inesperado al cerrar sesión",
+    };
   }
 
-  redirect("/login");
+  // Redirect debe estar fuera del try-catch porque lanza una excepción especial
+  redirect("/admin/login");
 }
 
 /**

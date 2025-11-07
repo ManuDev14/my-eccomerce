@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { createUserSchema, updateProfileSchema } from "@/lib/validations/user";
 import type { ActionResponse, UserWithProfile, Profile } from "@/types/user";
@@ -12,27 +13,38 @@ import type { CreateUserInput, UpdateProfileInput } from "@/lib/validations/user
 
 /**
  * Get all users with their profiles
+ * Uses admin client to bypass RLS and fetch all profiles
  */
 export async function getUsers(): Promise<ActionResponse<UserWithProfile[]>> {
   try {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
 
-    // Get users from auth.users (requires service role key or admin API)
-    // For now, we'll get profiles and assume they map to users
+    // Get profiles from database
     const { data: profiles, error: profilesError } = await supabase
       .from("profiles")
-      .select("*");
-    
+      .select("*")
+      .order("created_at", { ascending: false });
 
     if (profilesError) throw profilesError;
 
-    // Map profiles to users (we don't have access to auth.users email without service role)
-    const users: UserWithProfile[] = profiles.map((profile) => ({
-      id: profile.id,
-      email: "", // We can't get email without service role key
-      created_at: profile.created_at || "",
-      profile,
-    }));
+    // Get users from auth.users to get emails
+    // This only works with the admin client (service role key)
+    const { data: { users: authUsers }, error: authError } = await supabase.auth.admin.listUsers();
+
+    if (authError) {
+      console.error("Error fetching auth users:", authError);
+    }
+
+    // Map profiles to users with email from auth
+    const users: UserWithProfile[] = profiles.map((profile) => {
+      const authUser = authUsers?.find(u => u.id === profile.id);
+      return {
+        id: profile.id,
+        email: authUser?.email || "",
+        created_at: authUser?.created_at || profile.created_at || "",
+        profile,
+      };
+    });
 
     return { success: true, data: users };
   } catch (error) {
@@ -46,7 +58,7 @@ export async function getUsers(): Promise<ActionResponse<UserWithProfile[]>> {
 
 /**
  * Create a new user with profile
- * This uses Supabase Auth to create the user and automatically creates the profile
+ * Uses admin client to create users with admin privileges
  */
 export async function createUser(
   input: CreateUserInput
@@ -62,17 +74,16 @@ export async function createUser(
       };
     }
 
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
 
-    // Create user in Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    // Create user in Supabase Auth using admin API
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email: validation.data.email,
       password: validation.data.password,
-      options: {
-        data: {
-          full_name: validation.data.full_name,
-          avatar_url: validation.data.avatar_url || null,
-        },
+      email_confirm: true, // Auto-confirm email for admin-created users
+      user_metadata: {
+        full_name: validation.data.full_name,
+        avatar_url: validation.data.avatar_url || null,
       },
     });
 
@@ -125,6 +136,7 @@ export async function createUser(
 
 /**
  * Update user profile
+ * Uses admin client for administrative updates
  */
 export async function updateProfile(
   userId: string,
@@ -140,7 +152,7 @@ export async function updateProfile(
       };
     }
 
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
 
     const { data, error } = await supabase
       .from("profiles")
@@ -168,19 +180,30 @@ export async function updateProfile(
 
 /**
  * Delete user
- * Note: This only deletes the profile. To delete the auth user, you need service role key
+ * Uses admin client to delete both auth user and profile
  */
 export async function deleteUser(userId: string): Promise<ActionResponse> {
   try {
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
 
-    // Delete profile (the auth user will remain unless using service role key)
-    const { error } = await supabase
+    // Delete auth user (this will cascade to profile if properly configured)
+    const { error: authError } = await supabase.auth.admin.deleteUser(userId);
+
+    if (authError) {
+      console.error("Error deleting auth user:", authError);
+      throw authError;
+    }
+
+    // Also delete profile explicitly to ensure cleanup
+    const { error: profileError } = await supabase
       .from("profiles")
       .delete()
       .eq("id", userId);
 
-    if (error) throw error;
+    if (profileError) {
+      console.error("Error deleting profile:", profileError);
+      // Don't throw here as auth user is already deleted
+    }
 
     revalidatePath("/admin/dashboard/users");
 

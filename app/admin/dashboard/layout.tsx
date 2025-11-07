@@ -38,7 +38,7 @@ export default function DashboardLayout({
         </div>
       )}
       <div className="overflow-auto py-2 px-4">
-        <h1 className="pb-4">Welcome back, Tom!</h1>
+        {/* <h1 className="pb-4">Welcome back, Tom!</h1> */}
         {children}
       </div>
     </div>
