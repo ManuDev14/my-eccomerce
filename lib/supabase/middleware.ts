@@ -34,6 +34,16 @@ export async function updateSession(request: NextRequest) {
           );
         },
       },
+      auth: {
+        detectSessionInUrl: false,
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+      global: {
+        // Disable realtime for Edge Runtime compatibility
+        // Middleware only needs auth validation, not realtime features
+        fetch: fetch,
+      },
     }
   );
 

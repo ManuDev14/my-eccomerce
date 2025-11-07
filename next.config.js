@@ -9,6 +9,14 @@ const nextConfig = {
       },
     ],
   },
+
+  // Supabase compatibility with Edge Runtime
+  experimental: {
+    serverComponentsExternalPackages: [
+      '@supabase/supabase-js',
+      '@supabase/ssr',
+    ],
+  },
 };
 
 module.exports = nextConfig;
