@@ -1,0 +1,17 @@
+# Archivos de desarrollo
+.git
+.gitignore
+README.md
+CLAUDE.md
+
+# Supabase local
+supabase
+
+# Environment variables locales (usa el dashboard de Vercel)
+.env.local
+.env
+
+# Archivos de desarrollo
+*.log
+.DS_Store
+
