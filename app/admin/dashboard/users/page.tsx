@@ -1,6 +1,9 @@
 import { getUsers } from "@/lib/actions/users";
 import { UsersClient } from "@/components/features/users/users-client";
 
+// Force dynamic rendering since we use Supabase with cookies
+export const dynamic = 'force-dynamic';
+
 export default async function UsersPage() {
   const usersResult = await getUsers();
 

@@ -1,6 +1,9 @@
 import { getFamiliesWithRelations } from "@/lib/actions/catalog";
 import { CatalogTree } from "@/components/features/catalog/CatalogTree";
 
+// Force dynamic rendering since we use Supabase with cookies
+export const dynamic = 'force-dynamic';
+
 export default async function FamiliesPage() {
   const result = await getFamiliesWithRelations();
 

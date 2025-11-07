@@ -1,6 +1,9 @@
 import { getProducts, getOptionsWithFeatures, getFamiliesWithRelations } from "@/lib/actions/catalog";
 import { ProductsClient } from "@/components/features/catalog/products-client";
 
+// Force dynamic rendering since we use Supabase with cookies
+export const dynamic = 'force-dynamic';
+
 export default async function ProductsPage() {
   const [productsResult, optionsResult, familiesResult] = await Promise.all([
     getProducts(),
