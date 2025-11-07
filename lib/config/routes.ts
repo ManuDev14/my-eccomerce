@@ -10,13 +10,13 @@
 /**
  * Routes that don't require authentication
  * These are accessible to everyone, including logged-out users
+ * Note: All product detail pages ([slug]) are public by default
+ * unless they match admin routes
  */
 export const publicRoutes = [
   "/",
   "/about",
   "/contact",
-  "/products",
-  "/products/*", // Product detail pages
 ] as const;
 
 /**

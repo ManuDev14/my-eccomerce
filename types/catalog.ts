@@ -69,6 +69,37 @@ export type VariantCreationData = {
   stock?: number;
 };
 
+// Filters for public product search
+export type ProductFilters = {
+  familyId?: number;
+  categoryId?: number;
+  subcategoryId?: number;
+  minPrice?: number;
+  maxPrice?: number;
+};
+
+// Public product with extended information for listing
+export type PublicProduct = Product & {
+  subcategory: Subcategory & {
+    category: Category & {
+      family: Family;
+    };
+  };
+  variantCount: number;
+  minPrice: number;
+  maxPrice: number;
+  hasStock: boolean;
+};
+
+// Filters data for UI
+export type FiltersData = {
+  families: FamilyWithRelations[];
+  priceRange: {
+    min: number;
+    max: number;
+  };
+};
+
 // Action response types
 export type ActionResponse<T = void> =
   | { success: true; data: T }
